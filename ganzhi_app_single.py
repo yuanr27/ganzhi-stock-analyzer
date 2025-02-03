@@ -10,9 +10,8 @@ def install_dependencies():
         'streamlit': '1.13.0',
         'sxtwl': '1.0.7',    # 替代lunardate的稳定农历库
         'python-dateutil': '2.8.2'
-    }
-    
-    for lib, ver in required.items():
+    
+for lib, ver in required.items():
         try:
             __import__(lib)
         except ImportError:

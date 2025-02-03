@@ -11,7 +11,7 @@ def install_dependencies():
         'sxtwl': '1.0.7',
         'python-dateutil': '2.8.2'
     }
-    
+
     for lib, ver in required.items():
         try:
             __import__(lib)
@@ -77,7 +77,7 @@ def get_accurate_ganzhi(solar_date):
 def main():
     st.title("📈 免依赖干支分析系统")
     date_input = st.date_input("选择2025年日期", datetime(2025,1,1))
-    
+
     if st.button("开始分析"):
         with st.spinner('正在启动时空引擎...'):
             try:

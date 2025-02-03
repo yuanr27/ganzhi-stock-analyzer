@@ -4,25 +4,27 @@ import subprocess
 import streamlit as st
 from datetime import datetime
 
-# ========== 自动安装依赖 ==========
-def install_dependencies():
-    required = {
-        'streamlit': '1.13.0',
-        'sxtwl': '1.0.7',
-        'python-dateutil': '2.8.2'
-    }
+# ========== 安全安装依赖 ==========
+def safe_install(package):
+    """更安全的依赖安装方式"""
+    try:
+        subprocess.run([
+            sys.executable, "-m", "pip", "install", 
+            package, "--quiet", "--no-cache-dir"
+        ], check=True)
+    except subprocess.CalledProcessError as e:
+        st.error(f"安装失败: {e}\n建议手动添加依赖到requirements.txt")
+        sys.exit(1)
 
-    for lib, ver in required.items():
-        try:
-            __import__(lib)
-        except ImportError:
-            subprocess.check_call([
-                sys.executable, "-m", "pip", "install",
-                f"{lib}=={ver}",
-                "--user", "--quiet", "--no-warn-script-location"
-            ])
+# 依赖清单
+DEPENDENCIES = [
+    "streamlit==1.13.0",
+    "sxtwl==1.0.7",
+    "python-dateutil==2.8.2"
+]
 
-install_dependencies()
+for dep in DEPENDENCIES:
+    safe_install(dep)
 
 # ========== 核心算法 ==========
 import sxtwl

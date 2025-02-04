@@ -1,30 +1,3 @@
-import streamlit as st
-from datetime import datetime
-import os
-import subprocess
-
-# --------- 自动安装依赖（无需手动操作） ---------
-def install_dependencies():
-    """自动安装所需依赖"""
-    required_libraries = {
-        "lunardate": "0.0.9",
-        "python-dateutil": "2.8.2"
-    }
-    
-    for lib, version in required_libraries.items():
-        try:
-            __import__(lib)
-        except ImportError:
-            st.warning(f"正在安装 {lib}...")
-            subprocess.check_call(["pip", "install", f"{lib}=={version}"])
-            st.success(f"{lib} 安装成功！")
-
-# 执行安装
-install_dependencies()
-
-# 导入依赖
-from lunardate import LunarDate
-
 # --------- 以下是完整功能代码 ---------
 # 常量定义
 TIAN_GAN = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"]

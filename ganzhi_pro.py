@@ -1,27 +1,96 @@
 import streamlit as st
 from datetime import datetime
 from lunardate import LunarDate
-import dateutil.parser as dparser
 
 # 常量定义
 TIAN_GAN = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"]
 DI_ZHI = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"]
 
-# 节气列表（示例数据，需补充完整）
-JIEQI_2025 = [
-    {"name": "立春", "date": datetime(2025, 2, 3)},
-    {"name": "雨水", "date": datetime(2025, 2, 18)},
-    {"name": "惊蛰", "date": datetime(2025, 3, 5)},
-    # 补充其他节气...
-]
+# 内置节气数据（2024-2026）
+JIEQI_DATA = {
+    2024: [
+        {"name": "立春", "date": datetime(2024, 2, 4)},
+        {"name": "雨水", "date": datetime(2024, 2, 19)},
+        {"name": "惊蛰", "date": datetime(2024, 3, 5)},
+        {"name": "春分", "date": datetime(2024, 3, 20)},
+        {"name": "清明", "date": datetime(2024, 4, 4)},
+        {"name": "谷雨", "date": datetime(2024, 4, 19)},
+        {"name": "立夏", "date": datetime(2024, 5, 5)},
+        {"name": "小满", "date": datetime(2024, 5, 20)},
+        {"name": "芒种", "date": datetime(2024, 6, 5)},
+        {"name": "夏至", "date": datetime(2024, 6, 21)},
+        {"name": "小暑", "date": datetime(2024, 7, 6)},
+        {"name": "大暑", "date": datetime(2024, 7, 22)},
+        {"name": "立秋", "date": datetime(2024, 8, 7)},
+        {"name": "处暑", "date": datetime(2024, 8, 22)},
+        {"name": "白露", "date": datetime(2024, 9, 7)},
+        {"name": "秋分", "date": datetime(2024, 9, 22)},
+        {"name": "寒露", "date": datetime(2024, 10, 8)},
+        {"name": "霜降", "date": datetime(2024, 10, 23)},
+        {"name": "立冬", "date": datetime(2024, 11, 7)},
+        {"name": "小雪", "date": datetime(2024, 11, 22)},
+        {"name": "大雪", "date": datetime(2024, 12, 7)},
+        {"name": "冬至", "date": datetime(2024, 12, 21)},
+        {"name": "小寒", "date": datetime(2024, 1, 5)},
+        {"name": "大寒", "date": datetime(2024, 1, 20)}
+    ],
+    2025: [
+        {"name": "立春", "date": datetime(2025, 2, 3)},
+        {"name": "雨水", "date": datetime(2025, 2, 18)},
+        {"name": "惊蛰", "date": datetime(2025, 3, 5)},
+        {"name": "春分", "date": datetime(2025, 3, 20)},
+        {"name": "清明", "date": datetime(2025, 4, 4)},
+        {"name": "谷雨", "date": datetime(2025, 4, 19)},
+        {"name": "立夏", "date": datetime(2025, 5, 5)},
+        {"name": "小满", "date": datetime(2025, 5, 20)},
+        {"name": "芒种", "date": datetime(2025, 6, 5)},
+        {"name": "夏至", "date": datetime(2025, 6, 21)},
+        {"name": "小暑", "date": datetime(2025, 7, 7)},
+        {"name": "大暑", "date": datetime(2025, 7, 22)},
+        {"name": "立秋", "date": datetime(2025, 8, 7)},
+        {"name": "处暑", "date": datetime(2025, 8, 23)},
+        {"name": "白露", "date": datetime(2025, 9, 7)},
+        {"name": "秋分", "date": datetime(2025, 9, 23)},
+        {"name": "寒露", "date": datetime(2025, 10, 8)},
+        {"name": "霜降", "date": datetime(2025, 10, 23)},
+        {"name": "立冬", "date": datetime(2025, 11, 7)},
+        {"name": "小雪", "date": datetime(2025, 11, 22)},
+        {"name": "大雪", "date": datetime(2025, 12, 7)},
+        {"name": "冬至", "date": datetime(2025, 12, 21)},
+        {"name": "小寒", "date": datetime(2025, 1, 5)},
+        {"name": "大寒", "date": datetime(2025, 1, 20)}
+    ],
+    2026: [
+        {"name": "立春", "date": datetime(2026, 2, 4)},
+        {"name": "雨水", "date": datetime(2026, 2, 18)},
+        {"name": "惊蛰", "date": datetime(2026, 3, 5)},
+        {"name": "春分", "date": datetime(2026, 3, 20)},
+        {"name": "清明", "date": datetime(2026, 4, 4)},
+        {"name": "谷雨", "date": datetime(2026, 4, 19)},
+        {"name": "立夏", "date": datetime(2026, 5, 5)},
+        {"name": "小满", "date": datetime(2026, 5, 21)},
+        {"name": "芒种", "date": datetime(2026, 6, 5)},
+        {"name": "夏至", "date": datetime(2026, 6, 21)},
+        {"name": "小暑", "date": datetime(2026, 7, 7)},
+        {"name": "大暑", "date": datetime(2026, 7, 23)},
+        {"name": "立秋", "date": datetime(2026, 8, 7)},
+        {"name": "处暑", "date": datetime(2026, 8, 23)},
+        {"name": "白露", "date": datetime(2026, 9, 7)},
+        {"name": "秋分", "date": datetime(2026, 9, 23)},
+        {"name": "寒露", "date": datetime(2026, 10, 8)},
+        {"name": "霜降", "date": datetime(2026, 10, 23)},
+        {"name": "立冬", "date": datetime(2026, 11, 7)},
+        {"name": "小雪", "date": datetime(2026, 11, 22)},
+        {"name": "大雪", "date": datetime(2026, 12, 7)},
+        {"name": "冬至", "date": datetime(2026, 12, 21)},
+        {"name": "小寒", "date": datetime(2026, 1, 5)},
+        {"name": "大寒", "date": datetime(2026, 1, 20)}
+    ]
+}
 
 def get_jieqi(year):
     """获取指定年份的节气列表"""
-    # 此处可接入第三方API实现精确查询
-    if year == 2025:
-        return JIEQI_2025
-    else:
-        return []  # 需补充其他年份数据
+    return JIEQI_DATA.get(year, [])
 
 def get_accurate_gan_zhi(solar_date):
     """精准计算干支（考虑农历与节气）"""
